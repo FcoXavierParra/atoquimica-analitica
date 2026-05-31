@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Francisco Parra · Análisis de Negocios y Tecnología</title>
+<meta name="description" content="Consultor de Análisis de Negocios y Tecnología. Automatización y modernización de procesos con BI, SQL y Power BI.">
+<style>
+  :root{
+    --navy:#1E2761; --teal:#00A896; --text:#2E3A4C; --muted:#7D8896;
+    --blue:#5DBED3; --blue-p:#E5F4F8; --green:#5CB85C; --green-p:#DCEFD9;
+    --peach:#F18C32; --peach-p:#FAE2CB; --yellow:#FDCB42; --yellow-p:#FEEFB8;
+    --mauve:#5A2C4D; --mauve-p:#E2D1DC; --border:#E2E7EF; --bg:#ffffff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:var(--text);background:var(--bg);line-height:1.6}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);letter-spacing:1px}
+  .brand svg{width:34px;height:34px}
+  .nav-links{display:flex;gap:26px;font-size:14px;font-weight:600}
+  .nav-links a:hover{color:var(--teal)}
+  @media(max-width:680px){.nav-links{display:none}}
+
+  /* HERO */
+  header.hero{position:relative;overflow:hidden;padding:80px 0 70px}
+  .blob{position:absolute;border-radius:50%;z-index:0}
+  .b1{width:340px;height:340px;background:var(--blue-p);top:-120px;right:-80px}
+  .b2{width:160px;height:160px;background:var(--yellow-p);top:-30px;right:60px}
+  .b3{width:260px;height:260px;background:var(--peach-p);bottom:-130px;left:-90px}
+  .hero-in{position:relative;z-index:1}
+  .eyebrow{color:var(--teal);font-weight:800;letter-spacing:3px;font-size:14px;text-transform:uppercase}
+  h1{font-size:54px;color:var(--navy);line-height:1.08;margin:14px 0 8px;font-weight:800}
+  .role{font-size:22px;color:var(--text);font-weight:600;margin-bottom:18px}
+  .lead{font-size:17px;color:var(--muted);max-width:640px;margin-bottom:28px}
+  .cta{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:30px;font-weight:700;font-size:15px;transition:.2s}
+  .btn-primary{background:var(--navy);color:#fff}
+  .btn-primary:hover{background:#161d4d;transform:translateY(-2px)}
+  .btn-ghost{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+  .btn-ghost:hover{background:var(--navy);color:#fff;transform:translateY(-2px)}
+  @media(max-width:680px){h1{font-size:38px}.role{font-size:18px}}
+
+  /* SECTIONS */
+  section{padding:64px 0}
+  .section-pastel{background:var(--blue-p)}
+  .kicker{color:var(--teal);font-weight:800;letter-spacing:2px;text-transform:uppercase;font-size:13px;margin-bottom:8px}
+  h2{font-size:32px;color:var(--navy);font-weight:800;margin-bottom:8px}
+  .sub{color:var(--muted);margin-bottom:30px;max-width:680px}
+
+  /* STACK chips */
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{background:#fff;border:1px solid var(--border);border-radius:30px;padding:8px 16px;font-weight:600;font-size:14px;color:var(--navy)}
+
+  /* CARDS */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+  .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;transition:.22s;position:relative;overflow:hidden}
+  .card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(30,39,97,.12)}
+  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+  .card h3{font-size:19px;color:var(--navy);font-weight:800}
+  .area{font-size:12.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:1px}
+  .card p{font-size:14.5px;color:var(--text);margin-top:8px}
+  .badge{font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:20px;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
+  .b-impl{background:var(--green-p);color:#2f7d2f}
+  .b-proto{background:var(--yellow-p);color:#9a7000}
+  .b-design{background:var(--blue-p);color:#1c7d94}
+  .card .bar{height:5px;border-radius:6px;margin-top:16px;background:var(--border);overflow:hidden}
+  .card .bar i{display:block;height:100%;border-radius:6px}
+
+  /* METHOD */
+  .method{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+  .mcard{background:#fff;border-radius:16px;padding:22px;border:1px solid var(--border)}
+  .mcard .ic{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:22px}
+  .mcard h4{color:var(--navy);font-size:17px;margin-bottom:6px}
+  .mcard p{font-size:14px;color:var(--muted)}
+
+  /* CONTACT */
+  .contact{background:var(--navy);color:#fff;border-radius:24px;padding:48px;text-align:center}
+  .contact h2{color:#fff}
+  .contact p{color:#CADCFC;margin-bottom:24px}
+  .contact .btn-primary{background:var(--teal)}
+  .contact .btn-primary:hover{background:#00bfa8}
+
+  footer{padding:30px 0;text-align:center;color:var(--muted);font-size:13px}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(20px);transition:.6s}
+  .reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="wrap nav-in">
+    <a href="#top" class="brand">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="40" fill="#0a0a0a"/>
+        <rect x="46" y="2" width="8" height="10" rx="1.5" fill="#0a0a0a"/><rect x="46" y="88" width="8" height="10" rx="1.5" fill="#0a0a0a"/>
+        <rect x="2" y="46" width="10" height="8" rx="1.5" fill="#0a0a0a"/><rect x="88" y="46" width="10" height="8" rx="1.5" fill="#0a0a0a"/>
+        <rect x="14" y="14" width="9" height="8" rx="1.5" transform="rotate(-45 18 18)" fill="#0a0a0a"/>
+        <rect x="77" y="14" width="9" height="8" rx="1.5" transform="rotate(45 82 18)" fill="#0a0a0a"/>
+        <rect x="14" y="78" width="9" height="8" rx="1.5" transform="rotate(45 18 82)" fill="#0a0a0a"/>
+        <rect x="77" y="78" width="9" height="8" rx="1.5" transform="rotate(-45 82 82)" fill="#0a0a0a"/>
+        <circle cx="50" cy="50" r="32" fill="#fff"/>
+        <polyline points="28,62 38,55 48,48 58,40 68,30" stroke="#00A896" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="68" cy="30" r="4" fill="#00A896"/>
+        <line x1="25" y1="70" x2="72" y2="70" stroke="#0a0a0a" stroke-width="1.6"/>
+      </svg>
+      ANALÍTICA
+    </a>
+    <div class="nav-links">
+      <a href="#perfil">Perfil</a>
+      <a href="#stack">Stack</a>
+      <a href="#soluciones">Soluciones</a>
+      <a href="#metodo">Método</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+  <div class="wrap hero-in">
+    <div class="eyebrow">Consultoría en Análisis de Negocios y Tecnología</div>
+    <h1>Francisco Parra</h1>
+    <div class="role">Automatización y modernización de procesos con datos</div>
+    <p class="lead">Ayudo a empresas tradicionales a tomar mejores decisiones con sus datos: levanto procesos, diseño soluciones de BI y automatizo tareas repetitivas para liberar tiempo y reducir errores.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#soluciones">Ver soluciones ↓</a>
+      <a class="btn btn-ghost" href="https://www.linkedin.com/in/francisco-parra-andia" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn btn-ghost" href="#contacto">Contacto</a>
+    </div>
+  </div>
+</header>
+
+<!-- PERFIL -->
+<section id="perfil">
+  <div class="wrap reveal">
+    <div class="kicker">Perfil</div>
+    <h2>De levantar procesos a modernizarlos</h2>
+    <p class="sub">Ingeniero en Electricidad y Analista Programador, enfocado en análisis de datos y BI. Actualmente lidero la creación del área de Analítica de Negocios en <strong>Atoquímica</strong> (importación y distribución de productos químicos). Trabajo con metodología CRISP-DM y un enfoque ágil: objetivos claros, ciclos cortos y resultados medibles, para que la tecnología avance al ritmo de la operación.</p>
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack" class="section-pastel">
+  <div class="wrap reveal">
+    <div class="kicker">Stack</div>
+    <h2>Herramientas y métodos</h2>
+    <p class="sub">Lo que pongo sobre la mesa para resolver problemas de negocio con datos.</p>
+    <div class="chips">
+      <span class="chip">Power BI</span><span class="chip">Power Query (M)</span><span class="chip">SQL</span>
+      <span class="chip">Azure SQL</span><span class="chip">Python</span><span class="chip">Modelado de Datos</span>
+      <span class="chip">ETL</span><span class="chip">CRISP-DM</span><span class="chip">Scrum</span>
+      <span class="chip">ERP Manager</span><span class="chip">Facturación Electrónica (XML/SII)</span>
+      <span class="chip">Automatización de Procesos</span><span class="chip">Data Storytelling</span>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUCIONES -->
+<section id="soluciones">
+  <div class="wrap reveal">
+    <div class="kicker">Portafolio</div>
+    <h2>Soluciones</h2>
+    <p class="sub">Casos reales desarrollados para Atoquímica. Los estados son honestos: lo implementado, lo prototipado y lo que está en diseño. El detalle técnico va con datos de ejemplo, sin exponer información de la empresa.</p>
+    <div class="grid">
+
+      <div class="card">
+        <div class="top"><div><h3>Reposición de Stock</h3><div class="area">Compras</div></div><span class="badge b-impl">Implementado v1</span></div>
+        <p>Modelo que cruza la demanda real (promedios móviles 3M/6M/12M) con el stock físico para decidir qué, cuánto y cuándo comprar. Menos quiebres y menos capital inmovilizado.</p>
+        <div class="bar"><i style="width:85%;background:var(--green)"></i></div>
+      </div>
+
+      <div class="card">
+        <div class="top"><div><h3>Costos de Importación</h3><div class="area">Compras / Comex</div></div><span class="badge b-impl">Implementado v1</span></div>
+        <p>Costo total importado por pedido con comparación contra el promedio histórico de 12 meses, para detectar desviaciones por producto.</p>
+        <div class="bar"><i style="width:85%;background:var(--green)"></i></div>
+      </div>
+
+      <div class="card">
+        <div class="top"><div><h3>Pedidos ETA</h3><div class="area">Ventas / Comex</div></div><span class="badge b-impl">Implementado v1</span></div>
+        <p>Seguimiento de importaciones, vencimientos y glosas de pago, centralizando lo que antes vivía en múltiples planillas.</p>
+        <div class="bar"><i style="width:85%;background:var(--green)"></i></div>
+      </div>
+
+      <div class="card">
+        <div class="top"><div><h3>Validación SII vs ERP Manager</h3><div class="area">Finanzas / Tributario</div></div><span class="badge b-proto">Primera versión</span></div>
+        <p>Control tributario que cruza el libro de compras del SII con el ERP, detectando diferencias de total e IVA y facturas faltantes.</p>
+        <div class="bar"><i style="width:55%;background:var(--yellow)"></i></div>
+      </div>
+
+      <div class="card">
+        <div class="top"><div><h3>Importación XML → ERP</h3><div class="area">Finanzas / Tributario</div></div><span class="badge b-proto">Prototipo</span></div>
+        <p>Lee el XML de la factura electrónica del SII y genera el archivo de importación al ERP con reglas por proveedor, reduciendo el ingreso manual.</p>
+        <div class="bar"><i style="width:45%;background:var(--yellow)"></i></div>
+      </div>
+
+      <div class="card">
+        <div class="top"><div><h3>Conexión ERP → Azure SQL</h3><div class="area">Soporte TI / Infraestructura</div></div><span class="badge b-design">Diseño en curso</span></div>
+        <p>Automatización de la conexión directa del ERP Manager a Azure SQL con refresco diario, para alimentar los paneles BI sin pasos manuales.</p>
+        <div class="bar"><i style="width:25%;background:var(--blue)"></i></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- MÉTODO -->
+<section id="metodo" class="section-pastel">
+  <div class="wrap reveal">
+    <div class="kicker">Cómo trabajo</div>
+    <h2>Método</h2>
+    <p class="sub">Modelamiento riguroso + gestión ágil, partiendo siempre de lo que ya existe.</p>
+    <div class="method">
+      <div class="mcard"><div class="ic" style="background:var(--blue-p)">🧭</div><h4>CRISP-DM</h4><p>Las 6 fases del modelamiento de datos: del entendimiento del negocio al despliegue.</p></div>
+      <div class="mcard"><div class="ic" style="background:var(--peach-p)">🔁</div><h4>Scrum</h4><p>Bloques de trabajo de 2 semanas, backlog priorizado y revisión periódica con el equipo.</p></div>
+      <div class="mcard"><div class="ic" style="background:var(--green-p)">🎯</div><h4>Criterios medibles</h4><p>Cada solución tiene un criterio de éxito objetivo; nada queda "a criterio".</p></div>
+      <div class="mcard"><div class="ic" style="background:var(--yellow-p)">🍋</div><h4>Enfoque efectual</h4><p>Parto de los medios disponibles y aprovecho las oportunidades que aparecen en el camino.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="wrap reveal">
+    <div class="contact">
+      <h2>Conversemos</h2>
+      <p>¿Tienes procesos en Excel que podrían automatizarse o datos que no estás aprovechando?</p>
+      <div class="cta" style="justify-content:center">
+        <a class="btn btn-primary" href="mailto:franciscoparra.andia@gmail.com">Escríbeme</a>
+        <a class="btn btn-ghost" style="border-color:#fff;color:#fff" href="https://www.linkedin.com/in/francisco-parra-andia" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Francisco Parra · Consultor de Análisis de Negocios y Tecnología · Santiago, Chile · 2026
+</footer>
+
+<script>
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')})},{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
