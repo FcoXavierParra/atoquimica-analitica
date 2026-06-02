@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reposición de Stock · Analítica Atoquímica</title>
+<meta name="description" content="Modelo BI de reposición de stock: promedios móviles de demanda cruzados con stock físico. Power BI + Power Query.">
+<style>
+  :root{--navy:#1E2761;--teal:#00A896;--text:#2E3A4C;--muted:#7D8896;--blue:#5DBED3;--blue-p:#E5F4F8;--green:#5CB85C;--green-p:#DCEFD9;--peach:#F18C32;--peach-p:#FAE2CB;--yellow:#FDCB42;--mauve:#5A2C4D;--border:#E2E7EF;--bg:#fff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Helvetica,Arial,sans-serif;color:var(--text);background:var(--bg);line-height:1.6}
+  .wrap{max-width:980px;margin:0 auto;padding:0 26px}
+  a{color:inherit;text-decoration:none}
+  nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:800;color:var(--navy);letter-spacing:1px}
+  .brand svg{width:30px;height:30px}
+  .back{font-size:14px;font-weight:600;color:var(--muted)}
+  .back:hover{color:var(--teal)}
+  .hero{background:var(--blue-p);padding:34px 0 38px}
+  .bc{font-size:13px;color:var(--teal);font-weight:700;letter-spacing:1px;margin-bottom:12px}
+  .htop{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  h1{font-size:36px;color:var(--navy);font-weight:800}
+  .badge{font-size:11.5px;font-weight:800;padding:5px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;background:var(--green-p);color:#2f7d2f}
+  .area{font-size:12.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px}
+  .lead{font-size:16px;color:var(--text);max-width:700px;margin-top:8px}
+  section{padding:34px 0}
+  h2{font-size:23px;color:var(--navy);font-weight:800;margin-bottom:16px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .box{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px}
+  .box h3{font-size:15px;color:var(--navy);margin-bottom:8px}
+  .box p{font-size:14px;color:var(--text)}
+  .secpastel{background:var(--blue-p)}
+  .pipe{background:#fafbfc;border:1px solid var(--border);border-radius:14px;padding:20px;overflow-x:auto}
+  .tech{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .tcard{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px}
+  .tcard b{color:var(--navy);font-size:14.5px}
+  .tcard p{font-size:13px;color:var(--text);margin-top:4px}
+  .snip{margin-bottom:20px}
+  .snip .why{font-size:13.5px;color:var(--muted);margin-bottom:8px}
+  .snip .why b{color:var(--navy)}
+  pre{background:#0E1845;color:#e6ebff;border-radius:12px;padding:18px;overflow-x:auto;font-family:Consolas,Monaco,monospace;font-size:12.5px;line-height:1.55}
+  pre .c{color:#8ea0d0}
+  pre .k{color:#00d6bd}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+  th{background:var(--navy);color:#fff;text-align:left;padding:9px 12px;font-size:12.5px}
+  td{padding:8px 12px;border-top:1px solid var(--border)}
+  .note{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:10px}
+  .pill{display:inline-block;background:#fff;border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:var(--navy);margin:4px 4px 0 0}
+  .disc{background:var(--yellow-p);border:1px solid var(--yellow);border-radius:12px;padding:14px 18px;font-size:13.5px;color:#7a5b00;margin-top:18px}
+  footer{padding:26px 0;text-align:center;color:var(--muted);font-size:12.5px;border-top:1px solid var(--border)}
+  @media(max-width:680px){.two,.tech{grid-template-columns:1fr}h1{font-size:28px}}
+</style>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a href="../index.html" class="brand">
+    <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40" fill="#0a0a0a"/><circle cx="50" cy="50" r="32" fill="#fff"/><polyline points="28,62 38,55 48,48 58,40 68,30" stroke="#00A896" stroke-width="5" stroke-linecap="round" fill="none"/><circle cx="68" cy="30" r="5" fill="#00A896"/><line x1="25" y1="70" x2="72" y2="70" stroke="#0a0a0a" stroke-width="2"/></svg>
+    ANALÍTICA
+  </a>
+  <a href="../index.html#soluciones" class="back">← Volver al portafolio</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="bc">PORTAFOLIO / SOLUCIONES</div>
+  <div class="htop"><h1>Reposición de Stock</h1><span class="badge">Implementado v1</span></div>
+  <div class="area">Compras · Power BI + Power Query</div>
+  <p class="lead">Modelo de BI que responde la pregunta clave de abastecimiento: ¿qué, cuánto y cuándo reponer? Cruza la demanda real (promedios móviles) con el stock físico para sustentar la propuesta de compra.</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="two">
+    <div class="box"><h3>El problema</h3><p>La reposición se decidía sobre planillas Excel dispersas y criterio manual: quiebres en productos de alta rotación, sobre-stock en los de baja, y retrabajo al consolidar ventas mes a mes.</p></div>
+    <div class="box"><h3>La solución</h3><p>Un pipeline que calcula promedios de venta en ventanas móviles de 3, 6 y 12 meses y los presenta junto al stock físico, para comparar demanda reciente vs. tendencia y decidir con datos.</p></div>
+  </div>
+</div></section>
+
+<section class="secpastel"><div class="wrap">
+  <h2>Pipeline de transformación</h2>
+  <div class="pipe">
+    <svg viewBox="0 0 900 120" style="min-width:760px;width:100%">
+      <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#8a929b"/></marker></defs>
+      <g font-family="Helvetica,Arial" font-size="11" font-weight="700" text-anchor="middle">
+        <rect x="10" y="40" width="120" height="44" rx="9" fill="#5DBED3"/><text x="70" y="58" fill="#fff">Consolidar</text><text x="70" y="72" fill="#eaf7fb" font-weight="400" font-size="9.5">ventas x prod/fecha</text>
+        <rect x="160" y="40" width="120" height="44" rx="9" fill="#5DBED3"/><text x="220" y="58" fill="#fff">Ventana 12M</text><text x="220" y="72" fill="#eaf7fb" font-weight="400" font-size="9.5">meses cerrados</text>
+        <rect x="310" y="40" width="130" height="44" rx="9" fill="#1E2761"/><text x="375" y="58" fill="#fff">Promedios</text><text x="375" y="72" fill="#00A896" font-size="9.5">3M · 6M · 12M</text>
+        <rect x="470" y="40" width="120" height="44" rx="9" fill="#F18C32"/><text x="530" y="58" fill="#fff">Enriquecer</text><text x="530" y="72" fill="#fdecdb" font-weight="400" font-size="9.5">familia + stock</text>
+        <rect x="620" y="40" width="120" height="44" rx="9" fill="#5CB85C"/><text x="680" y="58" fill="#fff">Blindaje</text><text x="680" y="72" fill="#e7f4e4" font-weight="400" font-size="9.5">nulos a 0</text>
+        <rect x="770" y="40" width="120" height="44" rx="9" fill="#5A2C4D"/><text x="830" y="58" fill="#fff">Salida</text><text x="830" y="72" fill="#e9d9e3" font-weight="400" font-size="9.5">tabla x producto</text>
+      </g>
+      <g stroke="#8a929b" stroke-width="2" fill="none">
+        <path d="M132 62 L158 62" marker-end="url(#a2)"/><path d="M282 62 L308 62" marker-end="url(#a2)"/>
+        <path d="M442 62 L468 62" marker-end="url(#a2)"/><path d="M592 62 L618 62" marker-end="url(#a2)"/><path d="M742 62 L768 62" marker-end="url(#a2)"/>
+      </g>
+    </svg>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Decisiones técnicas destacadas</h2>
+  <div class="tech">
+    <div class="tcard"><b>Fecha de simulación configurable</b><p>Recalcula "como si fuera" otra fecha, sin tocar la consulta.</p></div>
+    <div class="tcard"><b>Solo meses cerrados</b><p>Excluye el mes en curso para no sesgar los promedios.</p></div>
+    <div class="tcard"><b>Left join desde el maestro</b><p>Ningún producto desaparece por no tener ventas: detecta stock estancado.</p></div>
+    <div class="tcard"><b>Blindaje de nulos</b><p>Promedios siempre numéricos: sin errores aguas abajo.</p></div>
+  </div>
+</div></section>
+
+<section class="secpastel"><div class="wrap">
+  <h2>Power Query — rasgos técnicos (extractos)</h2>
+
+  <div class="snip">
+    <div class="why"><b>1. Fecha base parametrizable.</b> El cálculo usa una fecha de simulación si el usuario la define; si no, la fecha actual. Y siempre corta al último mes cerrado.</div>
+<pre><span class="c">// Si Reporte_Simulación tiene fecha activa, se usa esa; si no, hoy.</span>
+FechaBase  = <span class="k">if</span> FechaSimulacion = null
+             <span class="k">then</span> Date.From(DateTime.LocalNow())
+             <span class="k">else</span> Date.From(FechaSimulacion),
+FinPeriodo = Date.EndOfMonth(Date.AddMonths(FechaBase, -1))  <span class="c">// último mes cerrado</span></pre>
+  </div>
+
+  <div class="snip">
+    <div class="why"><b>2. Promedio móvil por ventana.</b> Mismo patrón para 3, 6 y 12 meses: se suma la ventana y se divide por su número de meses (aquí, el de 3M).</div>
+<pre><span class="c">// Promedio móvil de 3 meses sobre la matriz producto × mes</span>
+"Promedio_3M", (t) =&gt; List.Sum(
+    Table.SelectRows(t, each
+        [MesInicio] &gt;= Inicio3M <span class="k">and</span> [MesInicio] &lt;= FinMesCerrado
+    )[CantidadMes]
+) / 3</pre>
+  </div>
+
+  <div class="snip">
+    <div class="why"><b>3. Matriz producto × mes desde el maestro.</b> La clave: partir del maestro de productos (no de las ventas) para no perder códigos con stock pero sin ventas recientes.</div>
+<pre><span class="c">// Productos base = maestro sin duplicados (no las ventas)</span>
+ProductosBase = Table.Distinct(Table.SelectColumns(Producto, {"Codigo"})),
+<span class="c">// ...se cruzan con todos los meses y luego con las ventas (LeftOuter);</span>
+<span class="c">//    los meses sin venta quedan en 0, no se descartan.</span></pre>
+  </div>
+
+  <div class="disc"><b>Nota:</b> estos son extractos ilustrativos para mostrar el enfoque. La consulta completa, las fuentes y los datos de la empresa no se publican.</div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Salida del modelo (datos de ejemplo)</h2>
+  <table>
+    <tr><th>Código</th><th>Prom. 3M</th><th>Prom. 12M</th><th>Grupo</th><th>Proveedor</th><th>Stock</th></tr>
+    <tr><td>Q-001</td><td>66,7</td><td>41,2</td><td>Ácidos</td><td>Proveedor X</td><td>340</td></tr>
+    <tr><td>Q-002</td><td>16,7</td><td>9,1</td><td>Bases</td><td>Proveedor Y</td><td>15</td></tr>
+    <tr><td>Q-003</td><td>0,0</td><td>16,7</td><td>Carbonatos</td><td>Proveedor Z</td><td>0</td></tr>
+  </table>
+  <p class="note">Datos 100% ficticios. Comparando Prom. 3M vs 12M se ve si la demanda sube o baja; cruzado con el stock, sustenta la reposición.</p>
+  <div style="margin-top:14px">
+    <span class="pill">Power BI</span><span class="pill">Power Query (M)</span><span class="pill">Modelado de datos</span><span class="pill">ERP (origen)</span>
+  </div>
+</div></section>
+
+<footer>Francisco Parra · Consultor de Análisis de Negocios y Tecnología · 2026</footer>
+</body>
+</html>
